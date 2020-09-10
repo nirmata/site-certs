@@ -7,7 +7,7 @@ To use this repo:
 - Run build-configmap.sh
 - Install Kyverno on your cluster.
 - Install the config map site-certs.yaml in your default namespace
-- Install a Kyverno policy such as example_yamls/kyverno.yaml
+- Install a Kyverno policy such as example_yamls/kyverno-policy.yaml
 - Create a deployment with the targeted tag such as example_yamls/centos-bare.yaml.
 - You should see the configmap be mounted on the deployments pods providing the updated ca-cert bundle.
 
