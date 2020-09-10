@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: centos
+  labels:
+    app: centos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: centos
+  template:
+    metadata:
+      labels:
+        app: centos
+    spec:
+      containers:
+      - name: centos
+        image: centos:latest
+        command: ["sleep"]
+        args: ["243142354554"]
+        volumeMounts:
+        - name: ssl-volume
+          mountPath: /etc/ssl/
+      volumes:
+        - name: ssl-volume
+          configMap:
+             name: site-certs
+             defaultMode: 511
+             items:
+             - key: ca-certificates.crt
+               path: certs/ca-certificates.crt
+             - key: ca-bundle.crt
+               path: certs/ca-bundle.crt
+             - key: cert.pem
+               path: cert.pem
+             - key: openssl.cnf
+               path: openssl.cnf

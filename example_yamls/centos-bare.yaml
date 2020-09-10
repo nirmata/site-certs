@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: centos
+  labels:
+    site-certs: do
+    app: centos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: centos
+  template:
+    metadata:
+      labels:
+        site-certs: do
+        app: centos
+    spec:
+      containers:
+      - name: centos
+        image: centos:latest
+        command: ["sleep"]
+        args: ["243142354554"]

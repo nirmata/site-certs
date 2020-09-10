@@ -1,0 +1,43 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: site-certs
+spec:
+  validationFailureAction: audit
+  rules:
+  - name: clone-configmap
+    match:
+      resources:
+        kinds:
+        - Namespace
+    generate:
+      kind: ConfigMap
+      name: site-certs
+      namespace: "{{request.object.metadata.name}}"
+      synchronize : true
+      clone:
+        namespace: default
+        name: site-certs
+  - name: mutate-pod
+    match:
+      resources:
+        kinds:
+        - Deployment
+        selector:
+          matchLabels:
+            site-certs: do
+    mutate:
+      patchStrategicMerge:
+        spec:
+          template:
+            spec:
+              containers:
+              - (name): "*"
+                volumeMounts:
+                - name: ssl-volume
+                  mountPath: /etc/ssl/certs/
+              volumes:
+              - name: ssl-volume
+                configMap:
+                  name: site-certs
+                  defaultMode: 511
