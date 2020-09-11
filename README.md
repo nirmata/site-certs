@@ -32,6 +32,8 @@ Troubleshooting:
 Don't use apply use replace or create.
 - Kyverno isn't creating the configmap volumes on my pod. 
 Is the deployment tagged right? Is it a deployment?  Are you using a current version of Kyverno?
+- I need to do this on stateful sets.  
+Just create another policy targeting stateful sets.
 - I need a different ca-cer bundle.  
 You can change the container used to produce the ca certs, but note different distros put thing in different places and use different scripts.
 - It's not putting the cert files in the right place.  
