@@ -4,7 +4,7 @@ This example is how you can use Kyverno to share a common ca-cert bundle with lo
 
 To use this repo:
 - Place your .crt file to add to the ca-cert bundle.
-- Optonally add a cacerts from (java home)/lib/security
+- Optionally add a cacerts from (java home)/lib/security
 - Run "./build-configmap.sh"
 - Install Kyverno on your cluster.  
 ```kubectl apply -f https://raw.githubusercontent.com/nirmata/kyverno/master/definitions/install.yaml```
