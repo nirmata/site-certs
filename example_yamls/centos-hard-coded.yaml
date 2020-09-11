@@ -20,19 +20,23 @@ spec:
         command: ["sleep"]
         args: ["243142354554"]
         volumeMounts:
-        - name: ssl-volume
-          mountPath: /etc/ssl/
+        - name: site-certs
+          mountPath: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+          subPath: ca-certificates.crt
+        - name: site-certs
+          mountPath: /etc/ssl/certs/ca-certificates.crt
+          subPath: ca-certificates.crt
+        - name: site-certs
+          mountPath: /etc/ssl/certs/java/cacerts
+          subPath: cacerts
+        - name: site-certs
+          mountPath: /etc/pki/java/cacerts
+          subPath: cacerts
+        - name: site-certs
+          mountPath: /opt/java/openjdk/lib/security/cacerts
+          subPath: cacerts
       volumes:
-        - name: ssl-volume
+        - name: site-certs
           configMap:
              name: site-certs
-             defaultMode: 511
-             items:
-             - key: ca-certificates.crt
-               path: certs/ca-certificates.crt
-             - key: ca-bundle.crt
-               path: certs/ca-bundle.crt
-             - key: cert.pem
-               path: cert.pem
-             - key: openssl.cnf
-               path: openssl.cnf
+

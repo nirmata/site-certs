@@ -34,10 +34,19 @@ spec:
               containers:
               - (name): "*"
                 volumeMounts:
-                - name: ssl-volume
-                  mountPath: /etc/ssl/certs/
+                - name: site-certs
+                  mountPath: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem 
+                  subPath: ca-certificates.crt
+                - name: site-certs
+                  mountPath: /etc/ssl/certs/ca-certificates.crt 
+                  subPath: ca-certificates.crt
+                - name: site-certs
+                  mountPath: /etc/ssl/certs/java/cacerts 
+                  subPath: cacerts
+                - name: site-certs
+                  mountPath: /etc/pki/java/cacerts 
+                  subPath: cacerts
               volumes:
-              - name: ssl-volume
+              - name: site-certs
                 configMap:
                   name: site-certs
-                  defaultMode: 511
