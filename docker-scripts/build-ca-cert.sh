@@ -18,8 +18,11 @@ if [ -e /certs/certs/cacerts ];then
 else
     cp /certs/certs/cacerts /etc/ssl/certs/java/cacerts
 fi
-keytool  -import  -trustcacerts  -file /certs/certs/IssuerDigicert.crt -keystore /certs/ca-certs/cacerts -storepass changeit
 
+for cert in /certs/certs/*.crt;do
+    # Note I'm assuming the password is the standard one
+    keytool  -import  -trustcacerts  --alias "site$(basename -- $cert)" -file $cert -keystore /certs/ca-certs/cacerts -storepass changeit
+done
 
 # generate your cert bundle
 echo build cert bundle
