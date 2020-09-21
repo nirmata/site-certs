@@ -3,9 +3,9 @@
 This example demonstrates how you can use Kyverno to share a common ca-cert bundle with local site certs for Linux pods on Kubernetes.  The script build-configmap.sh will generate a configmap containing a ca-cert bundle for openssl and a cacerts file for java.  This configmap needs to be mounted to overwrite your existing ca-cert bundle, and cacerts truststore using Kyverno.
 
 To use this repo:
-- Place your .crt file to add to the ca-cert bundle.
-- Optionally add a cacerts from (java home)/lib/security
-- Run "./build-configmap.sh"
+- Place your .crt files to add to the ca-cert bundle in certs.
+- Optionally add a cacerts file from (java home)/lib/security in certs,
+- Run "./build-configmap.sh" This will produce site-certs.yaml.
 - Install Kyverno on your cluster.  
 ```kubectl apply -f https://raw.githubusercontent.com/nirmata/kyverno/master/definitions/install.yaml```
 - Install the config map site-certs.yaml in your default namespace  
@@ -20,29 +20,31 @@ To use this repo:
 ```kubectl exec -it centos-<something> -- curl -v some.site.com -n my_name_space```
 
 Files:
-- build-configmap.sh                      Main script
-- docker-scripts/build-ca-cert.sh         Script executed in docker container to build the cert bundle and trust store
+- build-configmap.sh                      Main script to create configmap.
+- docker-scripts/build-ca-cert.sh         Script executed in docker container to build the cert bundle and trust store.
 - example_yamls/centos-bare.yaml          Simple centos container useful to test curl.
 - example_yamlsc/entos-hard-coded.yaml    Version of above with the configmaps hard coded in.
 - example_yamls/kyverno-policy.yaml       Sample Kyverno policy to add configmap volumes to deployments.
+- site-certs.yaml                         A configmap with your new certs files.
+- ca-cert/                                This directory contains your generated cert files.
 
 
 Troubleshooting:
 - I can not install the configmap "Too long: must have at most 262144 bytes"  
-Don't use apply use replace or create.
+The configmap is too big for apply use either replace or create.
 - Kyverno isn't creating the configmap volumes on my pod. 
 Is the deployment tagged right? Is it a deployment?  Are you using a current version of Kyverno?
 - I need to do this on stateful sets.  
-Just create another policy targeting stateful sets.
-- I need a different ca-cer bundle.  
-You can change the container used to produce the ca certs, but note different distros put thing in different places and use different scripts.
+Just create another policy targeting stateful sets instead of deployments
+- I need a different base ca-cert bundle.  
+Put the required base cacerts in the certs directory. 
 - It's not putting the cert files in the right place.  
-You can simple update the mounts to add different file locations.
+You will need to update kyverno-policy.yam to add different file locations. (Sadly there is no standard for this.)
 - I can't pull from docker hub or run apt in my environment.  
-You just need a Ubuntu container with ca-certificates and openjdk-11-jre-headless installed.  Or modify it to use another distro you have locally.
+You just need a Ubuntu container with ca-certificates and openjdk-11-jre-headless installed. You can also alter docker-scripts/build-ca-cert.sh to use another distro you have locally, but realize non-Debian distros generate certs very differently.
 
 
 Limitations:
-- Some containers put the certs in non-standard places and you'll have to just keep new mount locations for the cert files.
-- You need to tag your deployments.  You can set it to all deployments, but that might break unexpectedly. Some apps use their own certs internally between pods.
+- Some containers put the certs in non-standard places and you'll have to just keep adding new mount locations for the cert files.
+- You need to tag your deployments.  You can set it to all deployments, but that might break containers unexpectedly. Some apps use their own certs internally between pods.
 - Kyverno only copies the configmap when namespaces are created.  You'll need to update the configmap in all namespaces for now.
