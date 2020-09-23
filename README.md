@@ -48,3 +48,4 @@ Limitations:
 - Some containers put the certs in non-standard places and you'll have to just keep adding new mount locations for the cert files.
 - You need to tag your deployments.  You can set it to all deployments, but that might break containers unexpectedly. Some apps use their own certs internally between pods.
 - Kyverno only copies the configmap when namespaces are created.  You'll need to update the configmap in all namespaces for now.
+- Kubernetes will not update files from configmaps if you use submounts like we are doing.  You could however build your app to load the cert files in the /site-certs directory which is not a submount.
