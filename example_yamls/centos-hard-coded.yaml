@@ -35,6 +35,8 @@ spec:
         - name: site-certs
           mountPath: /opt/java/openjdk/lib/security/cacerts
           subPath: cacerts
+        - name: site-certs
+          mountPath: /site-certs
       volumes:
         - name: site-certs
           configMap:

@@ -16,7 +16,7 @@ spec:
       namespace: "{{request.object.metadata.name}}"
       synchronize : true
       clone:
-        namespace: default
+        namespace: site-certs
         name: site-certs
   - name: mutate-pod
     match:
@@ -46,6 +46,8 @@ spec:
                 - name: site-certs
                   mountPath: /etc/pki/java/cacerts 
                   subPath: cacerts
+                - name: site-certs
+                  mountPath: /site-certs
               volumes:
               - name: site-certs
                 configMap:
