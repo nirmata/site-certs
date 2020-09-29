@@ -3,6 +3,7 @@
 url="nginx.cert-test.svc.cluster.local"
 
 echo Cleanup Files
+mkdir -p conf
 rm conf/*
 cp nginx/vhost.conf conf/
 
@@ -58,15 +59,15 @@ echo Setup Centos test sts
 kubectl apply -n cert-test -f ../example_yamls/centos-bare-sts.yaml
 
 sleep 30
-echo 
-echo Test without cert externally.  This should fail.
 IP=`kubectl -n cert-test get services  |grep nginx |awk '{print $3}'`
-curl https://$IP
+#echo 
+#echo Test without cert externally.  This should fail.
+#curl https://$IP
 
 echo
 echo Test with wrong url via centos container.  This should fail.
-kubectl -n cert-test exec -it centos-sts-0 -- curl https://$IP
+kubectl -n cert-test exec -it centos-0 -- curl https://$IP
 
 echo
 echo Test installed cert properly with valid address via centos container. This should pass.
-kubectl -n cert-test exec -it centos-sts-0 -- curl https://$url --output /dev/null 
+kubectl -n cert-test exec -it centos-0 -- curl https://$url --output /dev/null 
