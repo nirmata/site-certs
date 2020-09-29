@@ -22,6 +22,7 @@ spec:
     match:
       resources:
         kinds:
+        - StatefulSet
         - Deployment
         selector:
           matchLabels:
@@ -30,6 +31,9 @@ spec:
       patchStrategicMerge:
         spec:
           template:
+            metadata:
+              labels:
+                cert-version: "1"
             spec:
               containers:
               - (name): "*"
