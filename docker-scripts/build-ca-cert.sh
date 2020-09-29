@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 
 # We need to install ca-certificates, and jdk
 echo install ca-certificates and jdk
@@ -10,12 +10,12 @@ echo; echo build java cacerts keystore
 if [ -e /certs/certs/cacerts ];then
     cp /certs/certs/cacerts /certs/ca-certs/cacerts
 else
-    cp /certs/certs/cacerts /etc/ssl/certs/java/cacerts
+    cp /etc/ssl/certs/java/cacerts /certs/certs/cacerts 
 fi
 
 for cert in /certs/certs/*.crt;do
     # Note I'm assuming the password is the standard one
-    keytool  -import  -trustcacerts  --alias "site$(basename -- $cert)" -file "$cert" -keystore /certs/ca-certs/cacerts -storepass changeit
+    yes |keytool  -import  -trustcacerts  --alias "site$(basename -- $cert)" -file "$cert" -keystore /certs/ca-certs/cacerts -storepass changeit
 done
 
 # Position cert files
@@ -30,3 +30,4 @@ update-ca-certificates
 
 # Store cert bundle
 cp /etc/ssl/certs/ca-certificates.crt /certs/ca-certs/
+echo "$1" > /certs/ca-certs/version
