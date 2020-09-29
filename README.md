@@ -9,7 +9,7 @@ To use this repo:
 - Install Kyverno on your cluster.  
 ```kubectl apply -f https://raw.githubusercontent.com/nirmata/kyverno/master/definitions/install.yaml```
 - Install the config map site-certs.yaml in your default namespace  
-```kubectl create -f site-certs.yaml```
+```kubectl -n site-certs create -f site-certs.yaml```
 - Install a Kyverno policy such as example_yamls/kyverno-policy.yaml  
 ```kubectl apply -f example_yamls/kyverno-policy.yaml```
 - Create a deployment with the targeted tag such as example_yamls/centos-bare.yaml.  
