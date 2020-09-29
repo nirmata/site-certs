@@ -58,6 +58,8 @@ echo
 echo Setup Centos test sts
 kubectl apply -n cert-test -f ../example_yamls/centos-bare-sts.yaml
 
+echo
+echo Waiting for pods to be availble
 sleep 30
 IP=`kubectl -n cert-test get services  |grep nginx |awk '{print $3}'`
 #echo 
@@ -70,4 +72,9 @@ kubectl -n cert-test exec -it centos-0 -- curl https://$IP
 
 echo
 echo Test installed cert properly with valid address via centos container. This should pass.
-kubectl -n cert-test exec -it centos-0 -- curl https://$url --output /dev/null 
+if kubectl -n cert-test exec -it centos-0 -- curl https://$url --output /dev/null ;then
+	echo Passed Check
+else
+	echo Failed Check
+fi
+
