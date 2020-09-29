@@ -1,0 +1,8 @@
+This test script will:
+
+- Create a self signed cert, and generate configmaps for kyverno and nginx
+- Install kyverno
+- Create Nginx service with self signed cert
+- Create a centos pods for testing.
+
+After running test.sh 
