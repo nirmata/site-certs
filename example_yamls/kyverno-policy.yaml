@@ -51,6 +51,9 @@ spec:
                   mountPath: /etc/pki/java/cacerts 
                   subPath: cacerts
                 - name: site-certs
+                  mountPath: /usr/local/openjdk-11/lib/security/cacerts
+                  subPath: cacerts
+                - name: site-certs
                   mountPath: /site-certs
               volumes:
               - name: site-certs
