@@ -1,7 +1,9 @@
-#!/bin/bash
+#!/bin/bash 
 
-if [ ! -z "$1" ]; then 
+if [ -z "$1" ]; then 
     cert_version="1"
+else
+    cert_version=$1
 fi
 
 mkdir -p ca-certs
