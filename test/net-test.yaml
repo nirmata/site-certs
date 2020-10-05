@@ -1,10 +1,11 @@
 apiVersion: apps/v1
-kind: DaemonSet
+kind: StatefulSet
 metadata:
-  name: nirmata-net-test-all
+  name: nirmata-net-test
   labels:
     app.kubernetes.io/name: nirmata-net-test-all-app
 spec:
+  serviceName: "centos"
   selector:
     matchLabels:
         app.kubernetes.io/name: nirmata-net-test-all-app
@@ -17,25 +18,3 @@ spec:
         - name: nirmata-net-test-node
           image: nicolaka/netshoot
           command: [ "/bin/sh", "-c", "sleep  100000" ]
-          volumeMounts:
-          - name: site-certs
-            mountPath: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
-            subPath: ca-certificates.crt
-          - name: site-certs
-            mountPath: /etc/ssl/certs/ca-certificates.crt
-            subPath: ca-certificates.crt
-          - name: site-certs
-            mountPath: /etc/ssl/certs/java/cacerts
-            subPath: cacerts
-          - name: site-certs
-            mountPath: /etc/pki/java/cacerts
-            subPath: cacerts
-          - name: site-certs
-            mountPath: /opt/java/openjdk/lib/security/cacerts
-            subPath: cacerts
-          - name: site-certs
-            mountPath: /site-certs
-      volumes:
-        - name: site-certs
-          configMap:
-             name: site-certs

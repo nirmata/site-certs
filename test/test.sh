@@ -52,23 +52,24 @@ echo
 echo Setup nginx for testing
 kubectl -n cert-test apply -f nginx-conf.yaml
 kubectl -n cert-test apply -f nginx/nginx.yaml
-kubectl -n cert-test apply -f net-test.yaml
 
 echo 
-echo Setup Centos test sts
+echo Setup test statefulsets
 kubectl apply -n cert-test -f ../example_yamls/centos-bare-sts.yaml
+kubectl apply -n cert-test -f net-test.yaml
+
 
 echo
 echo Waiting for pods to be availble
-sleep 30
+sleep 60
 IP=`kubectl -n cert-test get services  |grep nginx |awk '{print $3}'`
 #echo 
 #echo Test without cert externally.  This should fail.
 #curl https://$IP
 
 echo
-echo Test with wrong url via centos container.  This should fail.
-kubectl -n cert-test exec -it centos-0 -- curl https://$IP
+echo Test with certs with alpine container.  This should fail.
+kubectl -n cert-test exec -it nirmata-net-test-0 -- curl https://$url --output /dev/null || echo Check passed
 
 echo
 echo Test installed cert properly with valid address via centos container. This should pass.
