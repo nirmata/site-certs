@@ -1,0 +1,49 @@
+---
+apiVersion: "batch/v1beta1"
+kind: "CronJob"
+metadata:
+  name: "site-certs"
+spec:
+  concurrencyPolicy: "Forbid"
+  suspend: false
+  successfulJobsHistoryLimit: 3
+  schedule: "* * * * *"
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      parallelism: 1
+      completions: 1
+      template:
+        metadata:
+          annotations: {}
+          labels:
+            app.kubernetes.io/name: "site-certs"
+        spec:
+          restartPolicy: "Never"
+          terminationGracePeriodSeconds: 30
+          nodeSelector: {}
+          serviceAccountName: "site-certs-sa"
+          serviceAccount: "site-certs-sa"
+          schedulerName: "default-scheduler"
+          dnsPolicy: "ClusterFirst"
+          volumes:
+          - name: "site-certs"
+            configMap:
+              name: "site-certs"
+          - name: "new-cert"
+            configMap:
+              name: "new-cert"
+          containers:
+          - name: "site-certs"
+            image: "nsilbory/site-certs:11"
+            command:
+            - "/update.sh"
+            imagePullPolicy: "IfNotPresent"
+            volumeMounts:
+            - name: "site-certs"
+              mountPath: "/site-certs"
+            - name: "new-cert"
+              mountPath: "/new-certs"
+            resources: {}
+          securityContext: {}
