@@ -35,5 +35,5 @@ echo "$version" > /certs/ca-certs/version
 
 cd /certs ||exit
 # build a configmap
-kubectl create configmap site-certs --dry-run --from-file=ca-certs/ -o yaml > site-certs.yaml
+kubectl create configmap site-certs --dry-run --from-file=ca-certs/ -o yaml |kubectl label -f- --dry-run -o yaml --local version=$version > site-certs.yaml
 echo created site-certs.yaml configmap

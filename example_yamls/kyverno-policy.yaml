@@ -19,6 +19,11 @@ spec:
         namespace: site-certs
         name: site-certs
   - name: mutate-pod
+    context:
+      - name: labels-dictionary
+        configMap:
+          name: site-certs
+          namespace: site-certs
     match:
       resources:
         kinds:
@@ -27,13 +32,17 @@ spec:
         selector:
           matchLabels:
             site-certs: do
+      preconditions:
+        - key: "{{ \"labels-dictionary\".metadata.labels.version }}"
+          operator: NotEquals
+          value: ""
     mutate:
       patchStrategicMerge:
         spec:
           template:
             metadata:
               labels:
-                cert-version: "1"
+                cert-version: "{{ \"labels-dictionary\".metadata.labels.version }}"
             spec:
               containers:
               - (name): "*"
