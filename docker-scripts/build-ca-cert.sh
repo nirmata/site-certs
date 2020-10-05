@@ -1,16 +1,17 @@
-#!/bin/bash 
+#!/bin/bash
 
-# We need to install ca-certificates, and jdk
-echo install ca-certificates and jdk
-apt-get update
-apt-get -y install ca-certificates openjdk-11-jre-headless
+if [ -z "$1" ]; then
+    version=$(date '+%d.%m.%Y.%H.%M.%S')
+else
+    version=$1
+fi
 
 echo; echo build java cacerts keystore
 
 if [ -e /certs/certs/cacerts ];then
     cp /certs/certs/cacerts /certs/ca-certs/cacerts
 else
-    cp /etc/ssl/certs/java/cacerts /certs/certs/cacerts 
+    cp /etc/ssl/certs/java/cacerts /certs/certs/cacerts
 fi
 
 for cert in /certs/certs/*.crt;do
@@ -30,4 +31,9 @@ update-ca-certificates
 
 # Store cert bundle
 cp /etc/ssl/certs/ca-certificates.crt /certs/ca-certs/
-echo "$1" > /certs/ca-certs/version
+echo "$version" > /certs/ca-certs/version
+
+cd /certs ||exit
+# build a configmap
+kubectl create configmap site-certs --dry-run --from-file=ca-certs/ -o yaml > site-certs.yaml
+echo created site-certs.yaml configmap
