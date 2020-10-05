@@ -27,6 +27,8 @@ Files:
 - example_yamls/kyverno-policy.yaml       Sample Kyverno policy to add configmap volumes to deployments.
 - site-certs.yaml                         A configmap with your new certs files.
 - ca-cert/                                This directory contains your generated cert files.
+- k8/                                     This directory contains a cronjob to automatically update your cert from certs in new-cert.  This is useful
+                                          if you are using Nirmata as you can just edit the new-cert config map to add/remove certs.
 
 
 Troubleshooting:
