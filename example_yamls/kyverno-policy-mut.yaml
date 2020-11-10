@@ -1,23 +1,10 @@
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
-  name: site-certs
+  name: site-certs-mut
 spec:
   validationFailureAction: audit
   rules:
-  - name: clone-configmap
-    match:
-      resources:
-        kinds:
-        - Namespace
-    generate:
-      kind: ConfigMap
-      name: site-certs
-      namespace: "{{request.object.metadata.name}}"
-      synchronize : true
-      clone:
-        namespace: site-certs
-        name: site-certs
   - name: mutate-pod
     context:
       - name: labels-dictionary

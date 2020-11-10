@@ -9,8 +9,8 @@ cp nginx/vhost.conf conf/
 
 echo
 echo Reinstall Kyverno
-kubectl delete -f https://raw.githubusercontent.com/nirmata/kyverno/master/definitions/install.yaml
-kubectl apply -f https://raw.githubusercontent.com/nirmata/kyverno/master/definitions/install.yaml
+kubectl delete -f ../kyverno-install.yaml
+kubectl apply -f ../kyverno-install.yaml
 
 echo
 echo Cleanup cert-test and site-certs namespaces
@@ -19,7 +19,8 @@ kubectl delete ns site-certs
 
 echo
 echo Install Kyverno Policy
-kubectl apply -f ../example_yamls/kyverno-policy.yaml
+kubectl apply -f ../example_yamls/kyverno-policy-cm.yaml
+kubectl apply -f ../example_yamls/kyverno-policy-mut.yaml
 
 echo
 echo Generate certs for $url 
@@ -45,6 +46,7 @@ cd -
 echo 
 echo Setup site-certs and cert-test namespaces
 kubectl create ns cert-test
+kubectl label ns cert-test site-certs=do
 kubectl create ns site-certs
 kubectl create -n site-certs -f ../site-certs.yaml
 
