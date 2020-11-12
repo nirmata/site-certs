@@ -1,4 +1,5 @@
-FROM ubuntu
+# Use current LTS
+FROM ubuntu:latest
 
 RUN apt-get update &&\
     apt-get -y install ca-certificates openjdk-11-jre-headless curl --no-install-recommends &&\
@@ -11,5 +12,7 @@ RUN apt-get update &&\
 COPY docker-scripts/build-ca-cert.sh /
 
 COPY k8/update.sh /
+
+# Can we do this as non-root with enough perm changes?
 
 RUN chmod 755 /update.sh /build-ca-cert.sh
