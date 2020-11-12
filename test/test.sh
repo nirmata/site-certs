@@ -46,9 +46,9 @@ cd -
 echo 
 echo Setup site-certs and cert-test namespaces
 kubectl create ns cert-test
-kubectl label ns cert-test site-certs=do
 kubectl create ns site-certs
 kubectl create -n site-certs -f ../site-certs.yaml
+kubectl label ns cert-test site-certs=do
 
 echo
 echo Setup nginx for testing
