@@ -11,7 +11,10 @@ To use this repo:
 - Install the config map site-certs.yaml in your default namespace  
 ```kubectl -n site-certs create -f site-certs.yaml```
 - Install a Kyverno policy such as example_yamls/kyverno-policy.yaml  
-```kubectl apply -f example_yamls/kyverno-policy.yaml```
+```kubectl apply -f example_yamls/kyverno-policy-cm.yaml```
+```kubectl apply -f example_yamls/kyverno-policy-mut.yaml```
+- Tag your namespace with site-certs=do
+```kubectl label ns my_namespace site-certs=do```
 - Create a deployment with the targeted tag such as example_yamls/centos-bare.yaml.  
 ```kubectl apply -f example_yamls/centos-bare.yaml -n my_name_space```
 - You should see the configmap be mounted on the deployments pods providing the updated certs.  
@@ -37,7 +40,7 @@ The configmap is too big for apply use either replace or create.
 - Kyverno isn't creating the configmap volumes on my pod. 
 Is the deployment tagged right? Is it a deployment?  Are you using a current version of Kyverno?
 - I need to do this on stateful sets.  
-Just create another policy targeting stateful sets instead of deployments
+Just create another policy targeting stateful sets instead of deployments or add sts as a target.
 - I need a different base ca-cert bundle.  
 Put the required base cacerts in the certs directory. 
 - It's not putting the cert files in the right place.  
@@ -49,5 +52,5 @@ You just need a Ubuntu container with ca-certificates and openjdk-11-jre-headles
 Limitations:
 - Some containers put the certs in non-standard places and you'll have to just keep adding new mount locations for the cert files.
 - You need to tag your deployments.  You can set it to all deployments, but that might break containers unexpectedly. Some apps use their own certs internally between pods.
-- Kyverno only copies the configmap when namespaces are created.  You'll need to update the configmap in all namespaces for now.
+- We need to label the namespace to let kyverno know to update them.  You can remove the label but then it will only do new namespaces.
 - Kubernetes will not update files from configmaps if you use submounts like we are doing.  You could however build your app to load the cert files in the /site-certs directory which is not a submount.

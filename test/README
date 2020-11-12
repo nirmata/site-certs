@@ -5,4 +5,4 @@ This test script will:
 - Create Nginx service with self signed cert
 - Create a centos pods for testing.
 
-After running test.sh 
+This is really just a sanity test for the maintainer use.
