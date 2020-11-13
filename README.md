@@ -1,6 +1,6 @@
 # site-certs
 
-This example demonstrates how you can use Kyverno to share a common ca-cert bundle with local site certs for Linux pods on Kubernetes.  The script build-configmap.sh will generate a configmap containing a ca-cert bundle for openssl and a cacerts file for java.  This configmap needs to be mounted to overwrite your existing ca-cert bundle, and cacerts truststore using Kyverno.
+This example demonstrates how you can use Kyverno to share a common ca-cert bundle with your own certs for Linux pods on Kubernetes.  The script build-configmap.sh will generate a configmap containing a ca-cert bundle for openssl and a cacerts file for java.  This configmap needs to be mounted to overwrite your existing ca-cert bundle, and cacerts truststore using Kyverno.
 
 To use this repo:
 - Place your .crt files to add to the ca-cert bundle in certs.
