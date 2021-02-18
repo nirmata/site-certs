@@ -11,7 +11,7 @@ RUN apt-get update &&\
 
 COPY docker-scripts/build-ca-cert.sh /
 
-COPY k8/update.sh /
+COPY k8-cronjob/update.sh /
 
 # Can we do this as non-root with enough perm changes?
 
