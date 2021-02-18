@@ -13,7 +13,6 @@ spec:
   template:
     metadata:
       labels:
-        site-certs: do
         app: centos
     spec:
       containers:
