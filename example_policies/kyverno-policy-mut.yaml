@@ -1,0 +1,50 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: site-certs-mut
+spec:
+  validationFailureAction: audit
+  rules:
+  - name: mutate-pod
+    context:
+      - name: labels-dictionary
+        configMap:
+          name: site-certs
+          namespace: site-certs
+    match:
+      resources:
+        kinds:
+        - StatefulSet
+        - Deployment
+        selector:
+          matchLabels:
+            site-certs: do
+    mutate:
+      patchStrategicMerge:
+        spec:
+          template:
+            spec:
+              containers:
+              - (name): "*"
+                volumeMounts:
+                - name: site-certs
+                  mountPath: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem 
+                  subPath: ca-certificates.crt
+                - name: site-certs
+                  mountPath: /etc/ssl/certs/ca-certificates.crt 
+                  subPath: ca-certificates.crt
+                - name: site-certs
+                  mountPath: /etc/ssl/certs/java/cacerts 
+                  subPath: cacerts
+                - name: site-certs
+                  mountPath: /etc/pki/java/cacerts 
+                  subPath: cacerts
+                - name: site-certs
+                  mountPath: /usr/local/openjdk-11/lib/security/cacerts
+                  subPath: cacerts
+                - name: site-certs
+                  mountPath: /site-certs
+              volumes:
+              - name: site-certs
+                configMap:
+                  name: site-certs
