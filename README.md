@@ -2,7 +2,10 @@
 
 This example demonstrates how you can use Kyverno to share a common ca-cert bundle with your own certs for Linux pods on Kubernetes.  The script build-configmap.sh will generate a configmap containing a ca-cert bundle for openssl and a cacerts file for java.  This configmap needs to be mounted to overwrite your existing ca-cert bundle, and cacerts truststore using Kyverno.
 
-To use this repo:
+To use this repo with Nirmata see the k8-cronjob directory.  You can also use the cronjob without Nirmata.
+
+
+To use this repo without the cronjob:
 - Place your .crt files to add to the ca-cert bundle in certs.
 - Optionally add a cacerts file from (java home)/lib/security in certs,
 - Run "./build-configmap.sh" This will produce site-certs.yaml.
@@ -24,25 +27,22 @@ To use this repo:
 
 Files:
 - build-configmap.sh                      Main script to create configmap.
+- k8-cronjob/                             This directory contains a cronjob to automatically update your cert from certs in new-cert.
 - docker-scripts/build-ca-cert.sh         Script executed in docker container to build the cert bundle and trust store.
 - example_yamls/centos-bare.yaml          Simple centos container useful to test curl.
 - example_yamlsc/entos-hard-coded.yaml    Version of above with the configmaps hard coded in.
 - example_yamls/kyverno-policy.yaml       Sample Kyverno policy to add configmap volumes to deployments.
 - site-certs.yaml                         A configmap with your new certs files.
 - ca-cert/                                This directory contains your generated cert files.
-- k8/                                     This directory contains a cronjob to automatically update your cert from certs in new-cert.  This is useful
-                                          if you are using Nirmata as you can just edit the new-cert config map to add/remove certs.
-
+- test                                    My test scripts to check that it works with new versions of K8 and Kyverno.
 
 Troubleshooting:
 - I can not install the configmap "Too long: must have at most 262144 bytes"  
 The configmap is too big for apply use either replace or create.
-- Kyverno isn't creating the configmap volumes on my pod. 
+- Kyverno isn't creating the configmap volumes on my pod.
 Is the deployment tagged right? Is it a deployment?  Are you using a current version of Kyverno?
-- I need to do this on stateful sets.  
-Just create another policy targeting stateful sets instead of deployments or add sts as a target.
 - I need a different base ca-cert bundle.  
-Put the required base cacerts in the certs directory. 
+Put the required base cacerts in the certs directory.
 - It's not putting the cert files in the right place.  
 You will need to update kyverno-policy.yam to add different file locations. (Sadly there is no standard for this.)
 - I can't pull from docker hub or run apt in my environment.  
